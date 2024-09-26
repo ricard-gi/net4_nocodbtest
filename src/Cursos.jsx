@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 
 
-import {TOKEN,url_nocodb} from './config.js';
+import { TOKEN, url_nocodb } from './config.js';
 
 
 
-function Cursos({refresh, setRefresh}){
+function Cursos({ refresh, actualiza, editar }) {
 
-    const [cursos, setCursos]= useState([]);
+    const [cursos, setCursos] = useState([]);
 
-    function getData(){
+    function getData() {
 
         const options = {
             method: "GET",
@@ -25,12 +25,12 @@ function Cursos({refresh, setRefresh}){
             .catch(e => console.log(e))
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getData()
     }, [refresh])
 
 
-    function borraCurso(id){
+    function borraCurso(id) {
         // console.log("borrando ", id)
 
         const id_object = {
@@ -46,38 +46,40 @@ function Cursos({refresh, setRefresh}){
         }
 
         fetch(url_nocodb, options)
-        .then(respuesta => respuesta.json())
-        .then(() => setRefresh(refresh+1))
-        .catch(e => console.log(e))
+            .then(respuesta => respuesta.json())
+            .then(() => actualiza())
+            .catch(e => console.log(e))
     }
 
     return (
         <>
             Cursos...
-         
-         <table>
-            <thead>
-                <tr>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Horas</th>
-                <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {cursos.map(curso => (
-                    <tr key={curso.Id}>
-                        <td>{curso.nombre}</td>
-                        <td>{curso.descripcion}</td>
-                        <td>{curso.horas}</td>
-                        <td><button onClick={()=>borraCurso(curso.Id)}>Elimina</button></td>
-                    </tr>
-                ))}
-            </tbody>
-         </table>
 
-            
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Horas</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {cursos.map(curso => (
+                        <tr key={curso.Id}>
+                            <td>{curso.Id}</td>
+                            <td>{curso.nombre}</td>
+                            <td>{curso.descripcion}</td>
+                            <td>{curso.horas}</td>
+                            <td><button onClick={() => borraCurso(curso.Id)}>Elimina</button></td>
+                            <td><button onClick={() => editar(curso.Id)}>Editar</button></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+
         </>
     )
 }

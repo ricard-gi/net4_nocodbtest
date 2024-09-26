@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {TOKEN,url_nocodb} from './config.js';
 
 
-function NuevoCurso(props) {
+function EditaCurso(props) {
 
   
     const [nombre, setNombre] = useState("");
@@ -14,13 +14,14 @@ function NuevoCurso(props) {
         e.preventDefault();
 
         const curso = {
+            "Id": props.id,
             "nombre": nombre,
             "horas": horas*1,
             "descripcion": descripcion
         }
 
         const options = {
-            method: "POST",
+            method: "PATCH",
             headers: {
                 "xc-token": TOKEN,
                 'Content-Type': 'application/json'
@@ -39,11 +40,37 @@ function NuevoCurso(props) {
     }
 
 
+    function getData() {
+
+        const options = {
+            method: "GET",
+            headers: {
+                "xc-token": TOKEN,
+                'Content-Type': 'application/json'
+            }
+        }
+
+        fetch(url_nocodb+"/"+props.id, options)
+            .then(respuesta => respuesta.json())
+            .then(x => {
+                setNombre(x.nombre);
+                setDescripcion(x.descripcion);
+                setHoras(x.horas);
+            })
+            .catch(e => console.log(e))
+    }
+
+    useEffect(() => {
+        getData()
+    }, [props.id])
+
+
+
 
 
     return (
-        <div style={{padding: "20px", backgroundColor: "beige"}}>
-        <h3>Nuevo Curso</h3>
+        <div style={{padding: "20px", backgroundColor: "cyan"}}>
+        <h3>Editar Curso</h3>
             <form onSubmit={enviarForm}>
                 <label htmlFor="nombre">Nombre</label>
                 <input type="text" id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
@@ -66,4 +93,4 @@ function NuevoCurso(props) {
 }
 
 
-export default NuevoCurso;
+export default EditaCurso;
