@@ -1,8 +1,6 @@
 import { useState } from "react";
 
-const TOKEN = "2HvRWLMLKVokz5Lsx-UrRDS46Ha_8ct-o6l80jz3";
-const url_nocodb = "https://app.nocodb.com/api/v2/tables/m5mp2wdb4mh3gs5/records";
-
+import {TOKEN,url_nocodb} from './config.js';
 
 
 function NuevoCurso(props) {

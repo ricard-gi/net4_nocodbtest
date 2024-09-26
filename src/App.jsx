@@ -10,7 +10,7 @@ function App(){
         <>
         <h1>Nocodb Test: Cursos</h1>
         
-        <Cursos refresh={refresh}/>
+        <Cursos setRefresh={setRefresh} refresh={refresh}/>
 
         <hr />
 

@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 
 
-const TOKEN = "2HvRWLMLKVokz5Lsx-UrRDS46Ha_8ct-o6l80jz3";
-const url_nocodb = "https://app.nocodb.com/api/v2/tables/m5mp2wdb4mh3gs5/records";
+import {TOKEN,url_nocodb} from './config.js';
 
 
 
-
-function Cursos(props){
+function Cursos({refresh, setRefresh}){
 
     const [cursos, setCursos]= useState([]);
 
@@ -29,16 +27,57 @@ function Cursos(props){
 
     useEffect(()=>{
         getData()
-    }, [props.refresh])
+    }, [refresh])
 
+
+    function borraCurso(id){
+        // console.log("borrando ", id)
+
+        const id_object = {
+            Id: id
+        }
+        const options = {
+            method: "DELETE",
+            headers: {
+                "xc-token": TOKEN,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(id_object)
+        }
+
+        fetch(url_nocodb, options)
+        .then(respuesta => respuesta.json())
+        .then(() => setRefresh(refresh+1))
+        .catch(e => console.log(e))
+    }
 
     return (
         <>
             Cursos...
          
-            <ul>
-                {cursos.map(curso => <li>{curso.nombre}</li>)}
-            </ul>
+         <table>
+            <thead>
+                <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Horas</th>
+                <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {cursos.map(curso => (
+                    <tr key={curso.Id}>
+                        <td>{curso.nombre}</td>
+                        <td>{curso.descripcion}</td>
+                        <td>{curso.horas}</td>
+                        <td><button onClick={()=>borraCurso(curso.Id)}>Elimina</button></td>
+                    </tr>
+                ))}
+            </tbody>
+         </table>
+
+            
         </>
     )
 }
